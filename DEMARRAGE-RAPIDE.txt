@@ -1,0 +1,94 @@
+═══════════════════════════════════════════════════════════════
+  SONO ÉGLISE - DÉMARRAGE RAPIDE (10 MINUTES)
+═══════════════════════════════════════════════════════════════
+
+📋 CHECKLIST DE DÉMARRAGE
+
+□ ÉTAPE 1 : SUPABASE (5 min)
+  1. Aller sur https://supabase.com
+  2. Créer un nouveau projet
+  3. SQL Editor → Copier/coller supabase-schema.sql → Run
+  4. SQL Editor → Copier/coller supabase-seed-data.sql → Run
+  5. Authentication → Add User :
+     - Email: sonoriste@eglise.com
+     - Password: SonoEglise2024!
+     - ✓ Auto Confirm User
+  6. Copier l'ID de l'utilisateur créé
+  7. SQL Editor → Exécuter :
+     INSERT INTO public.users (id, email, role)
+     VALUES ('VOTRE_USER_ID', 'sonoriste@eglise.com', 'sonoriste');
+  8. Settings → API → Copier :
+     - Project URL
+     - anon public key
+
+□ ÉTAPE 2 : PROJET (3 min)
+  1. Terminal :
+     cd /Applications/MAMP/htdocs/sono
+     npm install
+  
+  2. Créer .env.local :
+     NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
+     NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbG...
+  
+  3. Lancer :
+     npm run dev
+
+□ ÉTAPE 3 : TESTER (2 min)
+  1. Ouvrir http://localhost:3000
+  2. Se connecter :
+     - Email: sonoriste@eglise.com
+     - Password: SonoEglise2024!
+  3. Cliquer sur "Nouveau Service"
+  4. Tester les checklists !
+
+═══════════════════════════════════════════════════════════════
+
+🎯 UTILISATION
+
+1. CRÉER UN SERVICE
+   Dashboard → "Nouveau Service"
+
+2. AVANT LE CULTE
+   - Cocher les items d'allumage
+   - Ajouter des remarques si besoin
+
+3. PENDANT LE CULTE
+   - Passer à l'onglet "Pendant le Culte"
+   - Ajouter remarques et incidents
+
+4. APRÈS LE CULTE
+   - Passer à l'onglet "Après le Culte"
+   - Cocher les items d'extinction
+   - Cliquer sur "Terminer le Service"
+
+═══════════════════════════════════════════════════════════════
+
+📚 DOCUMENTATION
+
+- README.md              → Vue d'ensemble
+- GUIDE-DEMARRAGE.md     → Guide détaillé pas à pas
+- ARCHITECTURE.md        → Architecture technique
+- EXEMPLES-REQUETES.md   → Requêtes SQL utiles
+
+═══════════════════════════════════════════════════════════════
+
+❓ PROBLÈMES COURANTS
+
+"Invalid login credentials"
+→ Vérifier que l'utilisateur existe dans Auth ET dans public.users
+
+"Failed to fetch"
+→ Vérifier .env.local et redémarrer npm run dev
+
+Erreur SQL
+→ Exécuter schema.sql AVANT seed-data.sql
+
+═══════════════════════════════════════════════════════════════
+
+✅ VOUS ÊTES PRÊT !
+
+L'application est 100% fonctionnelle et prête à l'emploi.
+Bon culte ! 🎵🎤
+
+═══════════════════════════════════════════════════════════════
+

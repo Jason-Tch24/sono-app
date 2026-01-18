@@ -1,0 +1,179 @@
+═══════════════════════════════════════════════════════════════════════════════
+                        SONO ÉGLISE - WORKFLOW VISUEL
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           1. PAGE DE CONNEXION                              │
+│                                                                             │
+│   ┌───────────────────────────────────────────────────────────────────┐   │
+│   │                         Sono Église                               │   │
+│   │                    Connexion Sonoriste                            │   │
+│   │                                                                   │   │
+│   │   Email:    [sonoriste@eglise.com                    ]           │   │
+│   │   Password: [••••••••••••••••                        ]           │   │
+│   │                                                                   │   │
+│   │                   [ Se connecter ]                                │   │
+│   └───────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│   Fichier: app/page.tsx                                                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                      ↓
+                              Authentification
+                                      ↓
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              2. DASHBOARD                                   │
+│                                                                             │
+│   ┌───────────────────────────────────────────────────────────────────┐   │
+│   │  Sono Église                                    [Déconnexion]    │   │
+│   │                                                                   │   │
+│   │  [ + Nouveau Service ]                                            │   │
+│   │                                                                   │   │
+│   │  ┌─────────────────────────────────────────────────────────────┐ │   │
+│   │  │           Historique des Services                           │ │   │
+│   │  ├─────────────────────────────────────────────────────────────┤ │   │
+│   │  │ Dimanche 21 janvier 2024                    [En cours]      │ │   │
+│   │  │ Créé le 21/01/2024                                          │ │   │
+│   │  ├─────────────────────────────────────────────────────────────┤ │   │
+│   │  │ Dimanche 14 janvier 2024                    [Terminé]       │ │   │
+│   │  │ Créé le 14/01/2024                                          │ │   │
+│   │  └─────────────────────────────────────────────────────────────┘ │   │
+│   └───────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│   Fichier: app/dashboard/page.tsx                                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                      ↓
+                          Cliquer sur "Nouveau Service"
+                                      ↓
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          3. PAGE DU SERVICE                                 │
+│                                                                             │
+│   ┌───────────────────────────────────────────────────────────────────┐   │
+│   │  ← Retour    Service du dimanche 21 janvier 2024   [En cours]   │   │
+│   │                                                                   │   │
+│   │  [ Avant le Culte ] [ Pendant le Culte ] [ Après le Culte ]      │   │
+│   │                                                                   │   │
+│   │  ┌─────────────────────────────┐  ┌──────────────────────────┐  │   │
+│   │  │  Avant le Culte             │  │  Remarques               │  │   │
+│   │  ├─────────────────────────────┤  ├──────────────────────────┤  │   │
+│   │  │ ☑ Allumer l'ampli principal │  │ [Ajouter remarque...]    │  │   │
+│   │  │ ☑ Allumer la console        │  │ [ Ajouter ]              │  │   │
+│   │  │ ☐ Allumer les retours       │  │                          │  │   │
+│   │  │ ☐ Allumer les enceintes     │  │ 14:30 - Micro OK         │  │   │
+│   │  │ ☐ Vérifier les micros       │  │                          │  │   │
+│   │  │ ☐ Vérifier les HF           │  ├──────────────────────────┤  │   │
+│   │  │ ☐ Tester les instruments    │  │  Incidents               │  │   │
+│   │  │ ☐ Régler les niveaux        │  ├──────────────────────────┤  │   │
+│   │  │ ☐ Faire le soundcheck       │  │ Type: [Larsen ▼]        │  │   │
+│   │  │ ☐ Vérifier absence larsen   │  │ [Description...]         │  │   │
+│   │  │ ☐ Tester l'enregistrement   │  │ [ Signaler ]             │  │   │
+│   │  │ ☐ Vérifier retour prédic.   │  │                          │  │   │
+│   │  └─────────────────────────────┘  └──────────────────────────┘  │   │
+│   │                                                                   │   │
+│   │                  [ Terminer le Service ]                          │   │
+│   └───────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│   Fichier: app/service/[id]/page.tsx                                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+                            FLUX DE DONNÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+┌──────────────┐
+│   FRONTEND   │
+│  (Next.js)   │
+└──────┬───────┘
+       │
+       │ Supabase Client
+       │ (@supabase/supabase-js)
+       │
+       ↓
+┌──────────────┐
+│   SUPABASE   │
+│              │
+│  ┌────────┐  │
+│  │  Auth  │  │ ← Authentification
+│  └────────┘  │
+│              │
+│  ┌────────┐  │
+│  │   DB   │  │ ← PostgreSQL + RLS
+│  └────────┘  │
+└──────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+                        STRUCTURE DE LA BASE DE DONNÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+auth.users (Supabase Auth)
+    ↓
+public.users (id, email, role)
+    ↓
+public.services (id, date, user_id, status)
+    ↓
+    ├─→ public.checklist_progress (service_id, checklist_item_id, checked)
+    │       ↑
+    │       └─ public.checklist_items (phase, label, display_order)
+    │
+    ├─→ public.remarks (service_id, phase, content)
+    │
+    └─→ public.incidents (service_id, type, description)
+
+═══════════════════════════════════════════════════════════════════════════════
+                            PHASES DU SERVICE
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────┐
+│  AVANT LE CULTE     │  12 items
+│  (before_service)   │  
+│                     │  • Allumage du matériel
+│  ☐ Ampli            │  • Vérifications
+│  ☐ Console          │  • Soundcheck
+│  ☐ Retours          │  
+│  ☐ Enceintes        │  
+│  ☐ Micros           │  
+│  ☐ HF               │  
+│  ☐ Instruments      │  
+│  ☐ Niveaux          │  
+│  ☐ Soundcheck       │  
+│  ☐ Larsen           │  
+│  ☐ Enregistrement   │  
+│  ☐ Retour prédic.   │  
+└─────────────────────┘
+         ↓
+┌─────────────────────┐
+│  PENDANT LE CULTE   │  5 items
+│  (during_service)   │  
+│                     │  • Surveillance
+│  ☐ Niveaux sonores  │  • Ajustements
+│  ☐ Ajuster micros   │  • Gestion incidents
+│  ☐ Transitions      │  
+│  ☐ Noter incidents  │  
+│  ☐ Surveiller       │  
+└─────────────────────┘
+         ↓
+┌─────────────────────┐
+│  APRÈS LE CULTE     │  7 items
+│  (after_service)    │  
+│                     │  • Extinction
+│  ☐ Éteindre encein. │  • Rangement
+│  ☐ Éteindre retours │  • Validation
+│  ☐ Éteindre console │  
+│  ☐ Éteindre ampli   │  
+│  ☐ Ranger câbles    │  
+│  ☐ Vérifier tout    │  
+│  ☐ Valider service  │  
+└─────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+                            TYPES D'INCIDENTS
+═══════════════════════════════════════════════════════════════════════════════
+
+┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐
+│  LARSEN  │  │   MICRO  │  │    HF    │  │  AUTRE   │
+│          │  │          │  │          │  │          │
+│ Feedback │  │ Problème │  │ Sans fil │  │ Divers   │
+│ sonore   │  │ micro    │  │ problème │  │          │
+└──────────┘  └──────────┘  └──────────┘  └──────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+
