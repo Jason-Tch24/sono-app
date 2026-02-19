@@ -1,0 +1,87 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    🔧 CORRECTION ERREUR VERCEL - SONO ÉGLISE
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ ERREUR ACTUELLE :
+   "Error: supabaseUrl is required"
+
+✅ CAUSE :
+   Les variables d'environnement ne sont PAS configurées sur Vercel
+
+═══════════════════════════════════════════════════════════════════════════════
+                        🚀 SOLUTION EN 3 ÉTAPES (2 MINUTES)
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1 : ALLER SUR VERCEL
+  1. Ouvrir https://vercel.com
+  2. Se connecter
+  3. Cliquer sur votre projet "sono-app"
+
+ÉTAPE 2 : AJOUTER LES VARIABLES D'ENVIRONNEMENT
+  1. Cliquer sur "Settings" (en haut)
+  2. Cliquer sur "Environment Variables" (menu gauche)
+  3. Ajouter ces 2 variables :
+
+     ┌─────────────────────────────────────────────────────────────────┐
+     │ Variable 1                                                      │
+     ├─────────────────────────────────────────────────────────────────┤
+     │ Key:   NEXT_PUBLIC_SUPABASE_URL                                 │
+     │ Value: https://mnkemkxphsskmnzjoesr.supabase.co                 │
+     │ Env:   ✅ Production ✅ Preview ✅ Development                   │
+     └─────────────────────────────────────────────────────────────────┘
+
+     ┌─────────────────────────────────────────────────────────────────┐
+     │ Variable 2                                                      │
+     ├─────────────────────────────────────────────────────────────────┤
+     │ Key:   NEXT_PUBLIC_SUPABASE_ANON_KEY                            │
+     │ Value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh... │
+     │        (copier depuis .env.local)                               │
+     │ Env:   ✅ Production ✅ Preview ✅ Development                   │
+     └─────────────────────────────────────────────────────────────────┘
+
+  4. Cliquer sur "Save" pour chaque variable
+
+ÉTAPE 3 : REDÉPLOYER
+  1. Aller dans "Deployments"
+  2. Cliquer sur "••• " (3 points) du dernier déploiement
+  3. Cliquer sur "Redeploy"
+  4. Cliquer sur "Redeploy" pour confirmer
+
+═══════════════════════════════════════════════════════════════════════════════
+                            📋 VALEURS À COPIER
+═══════════════════════════════════════════════════════════════════════════════
+
+NEXT_PUBLIC_SUPABASE_URL :
+https://mnkemkxphsskmnzjoesr.supabase.co
+
+NEXT_PUBLIC_SUPABASE_ANON_KEY :
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ua2Vta3hwaHNza21uempvZXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg2OTE2MTMsImV4cCI6MjA4NDI2NzYxM30.wbCjadzW-b5jHTiETeiUSdw9k_y839diKG4Bv9zaTjg
+
+═══════════════════════════════════════════════════════════════════════════════
+                            ✅ VÉRIFICATION
+═══════════════════════════════════════════════════════════════════════════════
+
+Après le redéploiement :
+  1. Attendre que le statut soit "Ready" (1-2 minutes)
+  2. Ouvrir votre URL Vercel
+  3. Vous devriez voir la page de connexion
+  4. Tester la connexion
+
+═══════════════════════════════════════════════════════════════════════════════
+                            💡 MÉTHODE ALTERNATIVE (CLI)
+═══════════════════════════════════════════════════════════════════════════════
+
+Si vous préférez la ligne de commande :
+
+  npm i -g vercel
+  vercel login
+  vercel env add NEXT_PUBLIC_SUPABASE_URL production
+  vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY production
+  vercel --prod
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 RÉSUMÉ : Ajoutez les 2 variables d'environnement dans Vercel et redéployez !
+
+═══════════════════════════════════════════════════════════════════════════════
+

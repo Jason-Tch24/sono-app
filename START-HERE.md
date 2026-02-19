@@ -6,6 +6,17 @@ Vous avez entre les mains une **application MVP 100% fonctionnelle** pour gérer
 
 ---
 
+## 🚨 ERREUR VERCEL ? LISEZ CECI !
+
+**Si vous voyez l'erreur "Error: supabaseUrl is required" sur Vercel :**
+
+→ **Solution immédiate** : Ouvrez **[FIX-VERCEL-ERROR.txt](FIX-VERCEL-ERROR.txt)**
+→ **Guide complet** : Ouvrez **[DEPLOIEMENT-VERCEL.md](DEPLOIEMENT-VERCEL.md)**
+
+**Résumé** : Vous devez ajouter les variables d'environnement dans Vercel Settings → Environment Variables, puis redéployer.
+
+---
+
 ## ⚡ Démarrage Ultra-Rapide (10 minutes)
 
 ### Option 1 : Checklist Rapide
@@ -30,6 +41,8 @@ Tous les fichiers de documentation sont disponibles :
 | **[EXEMPLES-REQUETES.md](EXEMPLES-REQUETES.md)** | Pour tester la base de données |
 | **[COMMANDES-UTILES.md](COMMANDES-UTILES.md)** | Pour les commandes de développement |
 | **[WORKFLOW-VISUEL.txt](WORKFLOW-VISUEL.txt)** | Pour visualiser l'application |
+| **[DEPLOIEMENT-VERCEL.md](DEPLOIEMENT-VERCEL.md)** | Pour déployer sur Vercel |
+| **[FIX-VERCEL-ERROR.txt](FIX-VERCEL-ERROR.txt)** | Pour corriger l'erreur Vercel |
 
 ---
 
