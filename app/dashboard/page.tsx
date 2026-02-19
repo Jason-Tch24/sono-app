@@ -12,26 +12,26 @@ export default function DashboardPage() {
   const router = useRouter()
 
   useEffect(() => {
-    checkUser()
-    loadServices()
+    const init = async () => {
+      const { data: { user: currentUser } } = await supabase.auth.getUser()
+      if (!currentUser) {
+        router.push('/')
+        return
+      }
+      setUser(currentUser)
+      await loadServices(currentUser.id)
+    }
+    init()
   }, [])
 
-  const checkUser = async () => {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
-      router.push('/')
-      return
-    }
-    setUser(user)
-  }
-
-  const loadServices = async () => {
+  const loadServices = async (userId: string) => {
     try {
       const { data, error } = await supabase
         .from('services')
         .select('*')
+        .eq('user_id', userId)
         .order('date', { ascending: false })
-        .limit(10)
+        .limit(50)
 
       if (error) throw error
       setServices(data || [])
@@ -44,25 +44,16 @@ export default function DashboardPage() {
 
   const createNewService = async () => {
     if (!user) return
-
     try {
       const today = new Date().toISOString().split('T')[0]
-      
       const { data, error } = await supabase
         .from('services')
-        .insert({
-          date: today,
-          user_id: user.id,
-          status: 'en_cours'
-        })
+        .insert({ date: today, user_id: user.id, status: 'en_cours' })
         .select()
         .single()
 
       if (error) throw error
-
-      if (data) {
-        router.push(`/service/${data.id}`)
-      }
+      if (data) router.push(`/service/${data.id}`)
     } catch (err: any) {
       alert('Erreur: ' + err.message)
     }
@@ -73,82 +64,184 @@ export default function DashboardPage() {
     router.push('/')
   }
 
+  const activeServices = services.filter(s => s.status === 'en_cours')
+  const completedServices = services.filter(s => s.status === 'termine')
+
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Chargement...</div>
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '16px' }}>
+        <div style={{ width: '40px', height: '40px', border: '3px solid var(--border)', borderTopColor: 'var(--primary)', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} />
+        <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Chargement...</span>
+        <style jsx>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Sono Église</h1>
-          <button
-            onClick={handleLogout}
-            className="text-sm text-gray-600 hover:text-gray-900"
-          >
+    <div style={{ minHeight: '100vh', background: 'var(--bg-dark)' }}>
+      {/* Header */}
+      <header className="glass-strong" style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 50,
+        borderBottom: '1px solid var(--border)',
+      }}>
+        <div style={{
+          maxWidth: '900px',
+          margin: '0 auto',
+          padding: '14px 20px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{
+              width: '38px',
+              height: '38px',
+              background: 'linear-gradient(135deg, var(--primary), var(--accent))',
+              borderRadius: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '18px',
+            }}>
+              🎵
+            </div>
+            <div>
+              <h1 style={{ fontSize: '1.1rem', fontWeight: '700', color: 'var(--text-primary)', lineHeight: 1.2 }}>
+                Sono Église
+              </h1>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                {user?.email}
+              </p>
+            </div>
+          </div>
+          <button onClick={handleLogout} className="btn-ghost" style={{ padding: '8px 16px', fontSize: '0.8rem' }}>
             Déconnexion
           </button>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <button
-            onClick={createNewService}
-            className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 font-medium"
-          >
-            + Nouveau Service
-          </button>
+      {/* Main */}
+      <main style={{ maxWidth: '900px', margin: '0 auto', padding: '24px 20px' }}>
+        {/* Stats row */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+          gap: '12px',
+          marginBottom: '28px',
+        }}>
+          <div className="card" style={{ padding: '20px' }}>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Total services</div>
+            <div style={{ fontSize: '1.75rem', fontWeight: '700', color: 'var(--text-primary)' }}>{services.length}</div>
+          </div>
+          <div className="card" style={{ padding: '20px' }}>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '6px' }}>En cours</div>
+            <div style={{ fontSize: '1.75rem', fontWeight: '700', color: '#fbbf24' }}>{activeServices.length}</div>
+          </div>
+          <div className="card" style={{ padding: '20px' }}>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Terminés</div>
+            <div style={{ fontSize: '1.75rem', fontWeight: '700', color: '#34d399' }}>{completedServices.length}</div>
+          </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow">
-          <div className="px-6 py-4 border-b">
-            <h2 className="text-xl font-semibold">Historique des Services</h2>
-          </div>
-          
-          <div className="divide-y">
-            {services.length === 0 ? (
-              <div className="px-6 py-8 text-center text-gray-500">
-                Aucun service enregistré
-              </div>
-            ) : (
-              services.map((service) => (
+        {/* New service button */}
+        <button
+          onClick={createNewService}
+          className="btn-primary"
+          style={{
+            width: '100%',
+            padding: '16px',
+            fontSize: '1rem',
+            marginBottom: '28px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            borderRadius: '14px',
+          }}
+        >
+          <span style={{ fontSize: '1.2rem' }}>+</span>
+          Nouveau Service
+        </button>
+
+        {/* Services list */}
+        <div>
+          <h2 style={{
+            fontSize: '1rem',
+            fontWeight: '600',
+            color: 'var(--text-secondary)',
+            marginBottom: '16px',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+          }}>
+            Mon historique
+          </h2>
+
+          {services.length === 0 ? (
+            <div className="card" style={{
+              padding: '48px 20px',
+              textAlign: 'center',
+            }}>
+              <div style={{ fontSize: '3rem', marginBottom: '12px' }}>🎤</div>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>Aucun service enregistré</p>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '4px' }}>Appuyez sur "Nouveau Service" pour commencer</p>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {services.map((service, index) => (
                 <div
                   key={service.id}
-                  className="px-6 py-4 hover:bg-gray-50 cursor-pointer"
+                  className="card animate-slide-up"
+                  style={{
+                    padding: '18px 20px',
+                    cursor: 'pointer',
+                    animationDelay: `${index * 0.05}s`,
+                    opacity: 0,
+                  }}
                   onClick={() => router.push(`/service/${service.id}`)}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(99, 102, 241, 0.3)'
+                    e.currentTarget.style.transform = 'translateX(4px)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--border)'
+                    e.currentTarget.style.transform = 'translateX(0)'
+                  }}
                 >
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <div className="font-medium">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{
+                        fontWeight: '600',
+                        fontSize: '0.95rem',
+                        color: 'var(--text-primary)',
+                        marginBottom: '4px',
+                        textTransform: 'capitalize',
+                      }}>
                         {new Date(service.date).toLocaleDateString('fr-FR', {
                           weekday: 'long',
-                          year: 'numeric',
+                          day: 'numeric',
                           month: 'long',
-                          day: 'numeric'
+                          year: 'numeric',
                         })}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                         Créé le {new Date(service.created_at).toLocaleDateString('fr-FR')}
                       </div>
                     </div>
-                    <div>
-                      <span className={`px-3 py-1 rounded-full text-sm ${
-                        service.status === 'termine' 
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-yellow-100 text-yellow-800'
-                      }`}>
-                        {service.status === 'termine' ? 'Terminé' : 'En cours'}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
+                      <span className={`badge ${service.status === 'termine' ? 'badge-success' : 'badge-warning'}`}>
+                        {service.status === 'termine' ? '✓ Terminé' : '● En cours'}
                       </span>
+                      <span style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>›</span>
                     </div>
                   </div>
                 </div>
-              ))
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </main>
     </div>
   )
 }
-
